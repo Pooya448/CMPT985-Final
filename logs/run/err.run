@@ -1,0 +1,6 @@
+Traceback (most recent call last):
+  File "trainer_arch.py", line 15, in <module>
+    from data.MGNData import MGNData
+  File "/cobra/u/gtiwari/ARCH/data/MGNData.py", line 9, in <module>
+    from utils import *
+ModuleNotFoundError: No module named 'utils'

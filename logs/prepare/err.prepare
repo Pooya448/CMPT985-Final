@@ -1,0 +1,3 @@
+/u/gtiwari/conda-envs/arch/lib/python3.7/site-packages/pytorch3d/io/utils.py:66: UserWarning: Faces have invalid indices
+  warnings.warn("Faces have invalid indices")
+fatal: unable to access 'https://github.com/Pooya448/ARCH.git/': Failed to connect to github.com port 443: Connection timed out
