@@ -40,10 +40,11 @@ import numpy as np
 
 from utils.geometry import load_tex_mesh, sample_from_mesh
 
+
 class MGNPrep(object):
 
     def __init__(self, data_dir, num_views, cam_type, n_sample=50000):
-        self.device = self.get_device()
+        self.device = torch.device('mps')
         self.data_dir = data_dir
         self.subjects = self.list_subjects()
         self.num_views = num_views
