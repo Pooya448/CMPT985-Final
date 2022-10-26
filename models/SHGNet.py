@@ -11,10 +11,10 @@ class SHGNet(nn.Module):
         self.in_channels = opt['in_channels']
         self.n_joints = opt['n_joints']
 
-        self.Hourglass = nn.ModuleList()
+        self.HGs = Hourglass(self.in_channels, self.out_channels, self.n_joints)
 
-        self.Hourglass.append(Hourglass(self.in_channels, self.out_channels, self.n_joints))
-        self.Hourglass.append([Hourglass(self.out_channels, self.out_channels, self.n_joints) for _ in range(self.n_stacks - 1)])
+        # self.Hourglass.append(Hourglass(self.in_channels, self.out_channels, self.n_joints))
+        # self.Hourglass.append([Hourglass(self.out_channels, self.out_channels, self.n_joints) for _ in range(self.n_stacks - 1)])
 
 
     def forward(self, x):
