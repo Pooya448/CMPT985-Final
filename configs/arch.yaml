@@ -1,8 +1,8 @@
 data:
-  data_dir: /u/gtiwari/datasets/mgn/ # Training data directory
-  split_file: /u/gtiwari/datasets/mgn/split_file.npz
+  data_dir: /Users/pooya/Documents/SFU/Courses/CMPT985/Project/MGNData # Training data directory
+  split_file: /Users/pooya/Documents/SFU/Courses/CMPT985/Project/MGNData/split_file.npz
 experiment:
-  root_dir: /u/gtiwari/Models/ARCH/ # Where to save checkpoints and final trained models
+  root_dir: /Users/pooya/Documents/SFU/Courses/CMPT985/Project/Checkpoints # Where to save checkpoints and final trained models
   exp_name: trial_1 # exp_name
 model:
   spatial_feat: 171

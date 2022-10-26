@@ -4,17 +4,17 @@ import torch.nn as nn
 class SHGNet(nn.Module):
     """docstring for SHGNet."""
 
-    def __init__(self, arg):
-        super(SHGNet, opt).__init__()
+    def __init__(self, opt):
+        super(SHGNet, self).__init__()
         self.n_stacks = opt['n_stacks']
         self.out_channels = opt['out_channels']
         self.in_channels = opt['in_channels']
         self.n_joints = opt['n_joints']
 
-        self.HGs = nn.ModuleList([])
+        self.Hourglass = nn.ModuleList()
 
-        self.HGs.append(Hourglass(self.in_channels, self.out_channels, self.n_joints))
-        self.HGs.append([Hourglass(self.out_channels, self.out_channels, self.n_joints) for _ in range(self.n_stacks - 1)])
+        self.Hourglass.append(Hourglass(self.in_channels, self.out_channels, self.n_joints))
+        self.Hourglass.append([Hourglass(self.out_channels, self.out_channels, self.n_joints) for _ in range(self.n_stacks - 1)])
 
 
     def forward(self, x):
@@ -23,6 +23,8 @@ class SHGNet(nn.Module):
             x = HG(x)
 
         return x
+
+
 #
 # class SHGNet(nn.Module):
 #     """docstring for SHGNet."""

@@ -87,7 +87,7 @@ class PreHourglass(nn.Module):
     """docstring for PreHourglass"""
 
     def __init__(self, in_channels, out_channels):
-        super(, self).__init__()
+        super(PreHourglass, self).__init__()
 
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -126,7 +126,7 @@ class DownCube(nn.Module):
     """docstring for DownCube"""
 
     def __init__(self, in_channels, out_channels):
-        super(, self).__init__()
+        super(DownCube, self).__init__()
 
         self.in_channels = in_channels
         self.out_channels = out_channels
@@ -148,7 +148,7 @@ class UpCube(nn.Module):
     """docstring for UpCube"""
 
     def __init__(self, scale):
-        super(, self).__init__()
+        super(UpCube, self).__init__()
 
         self.upsample = nn.UpsamplingNearest2d(scale_factor=scale)
 
@@ -161,9 +161,9 @@ class FeatCube(nn.Module):
     """docstring for FeatCube"""
 
     def __init__(self, n_block, channels):
-        super(, self).__init__()
+        super(FeatCube, self).__init__()
 
-        self.channels = in_channels
+        self.channels = channels
         self.n_block = n_block
 
         self.blocks = nn.ModuleList([BottleneckBlock(in_channels=channels, out_channels=channels) for _ in range(self.n_block)])
@@ -179,7 +179,7 @@ class BottleneckBlock(nn.Module):
     """docstring for BottleneckBlock"""
 
     def __init__(self, in_channels, out_channels):
-        super(, self).__init__()
+        super(BottleneckBlock, self).__init__()
 
         self.in_channels = in_channels
         self.out_channels = out_channels
