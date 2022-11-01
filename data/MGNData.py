@@ -79,10 +79,10 @@ class MGNData(Dataset):
         idxs = perm[:self.n_sample]
 
         # print("points", points.shape)
-        points = points[idxs]
+        # points = points[idxs]
         # normals = normals[idxs]
         # colors = colors[idxs]
-        # points = points[:, idxs, :]
+        points = points[:, idxs, :]
         # print("after points", points.shape)
         # print("normals shape", normals.shape, idxs)
         normals = normals[:, idxs, :]
