@@ -19,9 +19,7 @@ class SHGNet(nn.Module):
 
     def forward(self, x):
         im = x
-        for HG in self.HGs:
-            x = HG(x)
-
+        x = HG(x)
         return x
 
 
