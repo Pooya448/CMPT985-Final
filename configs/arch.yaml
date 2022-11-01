@@ -1,8 +1,8 @@
 data:
-  data_dir: /Users/pooya/Documents/SFU/Courses/CMPT985/Project/MGNData # Training data directory
-  split_file: /Users/pooya/Documents/SFU/Courses/CMPT985/Project/MGNData/split_file.npz
+  data_dir: C:\Users\17788\CMPT985\Multi-Garment_dataset # Training data directory
+  split_file: C:\Users\17788\CMPT985\Multi-Garment_dataset/split_file.npz
 experiment:
-  root_dir: /Users/pooya/Documents/SFU/Courses/CMPT985/Project/Checkpoints # Where to save checkpoints and final trained models
+  root_dir: C:\Users\17788\CMPT985\Checkpoints # Where to save checkpoints and final trained models
   exp_name: trial_1 # exp_name
 model:
   spatial_feat: 171
@@ -66,10 +66,10 @@ mlp:
   in_channels: 427
 training:
   batch_size: 4
-  continue_train: true
+  continue_train: false
   optimizer: Adam
   eval: false
-  num_worker: 30
+  num_worker: 0
   max_epoch: 100
-leap_path: /u/gtiwari/Body_Models/LEAP/smplh/sample_body.pt
-body_model_path: /u/gtiwari/Body_Models/smplh
+leap_path: C:\Users\17788\CMPT985\body_models\leap\smplh\sample_body.pt
+body_model_path: C:\Users\17788\CMPT985\body_models\smplh

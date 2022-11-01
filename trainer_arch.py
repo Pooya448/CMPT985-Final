@@ -14,6 +14,9 @@ from models.RBF import RBF
 from data.ARCHData import ARCHData
 from data.MGNData import MGNData
 
+import os
+os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
+
 def train(opt):
 
     # train_dataset = ARCHData('train', data_path=opt['data_path'], split_file=opt['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'])

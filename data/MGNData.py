@@ -73,15 +73,21 @@ class MGNData(Dataset):
         points = torch.load(os.path.join(subject_path, "points.pt"))
         normals = torch.load(os.path.join(subject_path, "normals.pt"))
         colors = torch.load(os.path.join(subject_path, "colors.pt"))
-        sdf = torch.load(os.path.join(subject_path, "sdf.pt"))
+        # sdf = torch.load(os.path.join(subject_path, "sdf.pt"))
 
         perm = torch.randperm(self.n)
         idxs = perm[:self.n_sample]
 
+        # print("points", points.shape)
         points = points[idxs]
-        normals = normals[idxs]
-        colors = colors[idxs]
-        sdf = sdf[idxs]
+        # normals = normals[idxs]
+        # colors = colors[idxs]
+        # points = points[:, idxs, :]
+        # print("after points", points.shape)
+        # print("normals shape", normals.shape, idxs)
+        normals = normals[:, idxs, :]
+        colors = colors[:, idxs, :]
+        # sdf = sdf[idxs]
 
         # col_im = read_image(col_im_path).permute((1, 2, 0))
 
