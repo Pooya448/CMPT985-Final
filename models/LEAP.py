@@ -39,7 +39,7 @@ def query_leap(points, leap_path, smpl_body, bm_path, batch_size, device, canoni
 
     # load LEAP
     leap_model = LEAPBodyModel(leap_path,
-                               bm_path=os.path.join(bm_path, smpl_body['gender'], 'model.npz'),
+                               bm_path=os.path.join(bm_path, smpl_body['gender'], 'model.pkl'),
                                num_betas=smpl_body['betas'].shape[1],
                                batch_size=batch_size,
                                device=device)
