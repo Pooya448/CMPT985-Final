@@ -45,7 +45,7 @@ class DR():
 
         colored_norms = 0.5 * norm + 0.5
 
-        print(f"\n\n\n\n render points shape: {len(points.tolist())}")
+        # print(f"\n\n\n\n render points shape: {len(points.tolist())}")
         # print(f"\n\n\n\n render points shape: {norm.shape}")
         # print(f"\n\n\n\n render points shape: {col.shape}")
         # points = points.tolist()

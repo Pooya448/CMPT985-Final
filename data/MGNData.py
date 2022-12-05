@@ -88,7 +88,7 @@ class MGNData(Dataset):
         # points = points[idxs]
         # normals = normals[idxs]
         # colors = colors[idxs]
-        points = points[:, idxs, :]
+        points = torch.squeeze(points[:, idxs, :])
         # print("after points", points.shape)
         # print("normals shape", normals.shape, idxs)
         normals = normals[:, idxs, :]
