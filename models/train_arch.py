@@ -12,6 +12,8 @@ import ipdb
 from .DR import DR
 from .LEAP import query_leap
 
+import tqdm
+
 class Trainer(object):
 
     def __init__(self, occ_net, norm_net, col_net, rbf, device, train_dataset, val_dataset,  batch_size, opt):
@@ -115,10 +117,10 @@ class Trainer(object):
         im_norm = batch.get("im_norm").to(device)
         azimuth = batch.get("azimuth").to(device)
 
-        print(f"shape of norms: {gt_norm.shape}")
-        print(f"shape of cols: {gt_col.shape}")
-        print(f"shape of occ: {gt_occ.shape}")
-        print(f"shape of ims {im_norm.shape}")
+        # print(f"shape of norms: {gt_norm.shape}")
+        # print(f"shape of cols: {gt_col.shape}")
+        # print(f"shape of occ: {gt_occ.shape}")
+        # print(f"shape of ims {im_norm.shape}")
 
         #use leap for weights and canonicalization
         # point_weights, can_points = query_leap(points, self.opt['leap_path'], smpl_body, self.opt['body_model_path'], self.batch_size, self.device, canonical_points=False, vis=False)
@@ -137,16 +139,28 @@ class Trainer(object):
 
         ###calculate all the loss here
         loss_dict = {}
+
+        pred_occ = pred_occ.permute(0, 2, 1)
+        pred_norm = pred_norm.permute(0, 2, 1)
+        pred_col = pred_col.permute(0, 2, 1)
+
+
         loss_dict['3d_occ'] = self.loss_3d_occ(pred_occ, gt_occ)
-        print(f"pred occ shape: {pred_occ.shape}")
-        print(f"gt occ shape: {gt_occ.shape}")
-        print(f"pred norm shape: {pred_occ.shape}")
-        print(f"gt norm shape: {gt_occ.shape}")
         loss_dict['3d_norm']  = self.loss_3d_norm(pred_norm, gt_norm)
         loss_dict['3d_col'] = self.loss_3d_col(pred_col, gt_col)
 
         #render predicted images
-        pred_im_col, pred_im_norm, pred_im_occ = self.renderer.render(points, pred_col, pred_occ, pred_norm)
+        pred_im_col, pred_im_norm, pred_im_occ = self.renderer.render(points, pred_occ, pred_col, pred_norm)
+
+
+        pred_im_col = pred_im_col.permute(0, 3, 1, 2)
+        pred_im_norm = pred_im_norm.permute(0, 3, 1, 2)
+
+        # print(f"\n\n\nshape of pred_im_col: {pred_im_col.shape}")
+        # print(f"shape of pred_im_norm {pred_im_norm.shape}")
+        #
+        # print(f"shape of im: {im.shape}")
+        # print(f"shape of im_norm {im_norm.shape}\n\n\n")
 
         loss_dict['2d_col'] = self.loss_2d_col(pred_im_col, im)
         loss_dict['2d_norm'] = self.loss_2d_norm(pred_im_norm, im_norm)
@@ -156,7 +170,7 @@ class Trainer(object):
 
     def train_model(self, epochs, eval=True):
         loss = 0
-        start = self.load_checkpoint()
+        start = self.load_checkpoint(resume=False)
         for epoch in range(start, epochs):
             sum_loss = 0
             print('Start epoch {}'.format(epoch))
@@ -164,10 +178,12 @@ class Trainer(object):
             if epoch % 100 == 0:   #save every 100 epochs
                 self.save_checkpoint(epoch)
 
-            for batch in train_data_loader:
+            for batch in tqdm.tqdm(train_data_loader):
                 loss, loss_dict = self.train_step(batch, epoch)
                 print("Current loss: {},   ".format(loss))
-                print("Individual loss: ", loss_dict)
+                # print("Individual loss: ", loss_dict)
+                for loss_key, loss_value in loss_dict.items():
+                    print(f"{loss_key}: {loss_value.item()}")
                 sum_loss += loss
             batch_loss = sum_loss / len(train_data_loader)
 
@@ -212,9 +228,9 @@ class Trainer(object):
                        _use_new_zipfile_serialization=False)
 
 
-    def load_checkpoint(self):
+    def load_checkpoint(self, resume=False):
         checkpoints = glob(self.checkpoint_path+'/*')
-        if True or len(checkpoints) == 0:
+        if not resume or len(checkpoints) == 0:
             print('No checkpoints found at {}'.format(self.checkpoint_path))
             return 0
 

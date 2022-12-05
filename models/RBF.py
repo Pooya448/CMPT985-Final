@@ -19,5 +19,5 @@ def RBF(X, Y, gamma=None, squared=False):
         euclidean = (x - y).pow(2).sum(-1).pow(0.5)
 
     kernel = torch.exp(-1 * gamma * euclidean)
-    print(f"kernel size: {kernel.shape}")
+    # print(f"kernel size: {kernel.shape}")
     return kernel.permute((0, 2, 1))
