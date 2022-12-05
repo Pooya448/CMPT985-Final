@@ -15,7 +15,7 @@ model:
       depth: 1 #ask
       n_joints: 10 #ask
     mlp:
-      channels: [427, 1024, 512, 256, 128]
+      channels: [427, 1024, 512, 256, 128, 1]
       no_residual: true  #just dummy
       last_activation: sigmoid   #just dummy
       nlast_activation: relu  #just dummy
@@ -25,7 +25,7 @@ model:
       in_channels: 3
       out_channels: 64
     mlp:
-      channels: [491, 1024, 512, 256, 128]
+      channels: [491, 1024, 512, 256, 128, 3]
       no_residual: true  #just dummy
       last_activation: sigmoid   #just dummy
       nlast_activation: relu  #just dummy
@@ -35,7 +35,7 @@ model:
       in_channels: 3
       out_channels: 64
     mlp:
-      channels: [555, 1024, 512, 256, 128]
+      channels: [555, 1024, 512, 256, 128, 3]
       no_residual: true  #just dummy
       last_activation: sigmoid   #just dummy
       nlast_activation: relu  #just dummy
@@ -65,7 +65,7 @@ mlp:
   norm: weight #what is this??
   in_channels: 427
 training:
-  batch_size: 4
+  batch_size: 1
   continue_train: false
   optimizer: Adam
   eval: false
