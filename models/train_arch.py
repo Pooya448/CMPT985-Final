@@ -168,7 +168,7 @@ class Trainer(object):
 
     def train_model(self, epochs, eval=True):
         loss = 0
-        start = self.load_checkpoint()
+        start = self.load_checkpoint(resume=False)
         for epoch in range(start, epochs):
             sum_loss = 0
             print('Start epoch {}'.format(epoch))
@@ -224,9 +224,9 @@ class Trainer(object):
                        _use_new_zipfile_serialization=False)
 
 
-    def load_checkpoint(self):
+    def load_checkpoint(self, resume=False):
         checkpoints = glob(self.checkpoint_path+'/*')
-        if len(checkpoints) == 0:
+        if not resume or len(checkpoints) == 0:
             print('No checkpoints found at {}'.format(self.checkpoint_path))
             return 0
 
