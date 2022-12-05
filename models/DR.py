@@ -44,9 +44,18 @@ class DR():
     def render(self, points, occ, col, norm):
 
         colored_norms = 0.5 * norm + 0.5
-        col_ptc = Pointclouds(points=[points], normals=[norm], features=[col])
-        norm_ptc = Pointclouds(points=[points], normals=[norm], features=[colored_norms])
-        occ_ptc = Pointclouds(points=[points], normals=[norm], features=[occ]) # Further Check -> Checked!
+
+        print(f"\n\n\n\n render points shape: {len(points.tolist())}")
+        # print(f"\n\n\n\n render points shape: {norm.shape}")
+        # print(f"\n\n\n\n render points shape: {col.shape}")
+        # points = points.tolist()
+        # norm = norm.tolist()
+        # col = col.tolist()
+        # occ = occ.tolist()
+
+        col_ptc = Pointclouds(points=points, normals=norm, features=col)
+        norm_ptc = Pointclouds(points=points, normals=norm, features=colored_norms)
+        occ_ptc = Pointclouds(points=points, normals=norm, features=occ) # Further Check -> Checked!
 
         # Dimension [B x im_size x im_size x 4] -> 4th channel is alpha
         col_render = self.renderer(col_ptc)

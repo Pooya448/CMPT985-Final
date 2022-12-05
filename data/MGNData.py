@@ -104,7 +104,7 @@ class MGNData(Dataset):
         # normals = torch.load(normals_path, map_location='cpu')
         # colors = torch.load(colors_path, map_location='cpu')
 
-        occ = torch.ones_like(points)
+        occ = torch.ones((self.n_sample, 1))
         joints = torch.zeros((171, 3))
 
         data_dict = {

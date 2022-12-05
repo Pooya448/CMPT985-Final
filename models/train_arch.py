@@ -137,16 +137,28 @@ class Trainer(object):
 
         ###calculate all the loss here
         loss_dict = {}
+
+        pred_occ = pred_occ.permute(0, 2, 1)
+        pred_norm = pred_norm.permute(0, 2, 1)
+        pred_col = pred_col.permute(0, 2, 1)
+
+
         loss_dict['3d_occ'] = self.loss_3d_occ(pred_occ, gt_occ)
-        print(f"pred occ shape: {pred_occ.shape}")
-        print(f"gt occ shape: {gt_occ.shape}")
-        print(f"pred norm shape: {pred_occ.shape}")
-        print(f"gt norm shape: {gt_occ.shape}")
         loss_dict['3d_norm']  = self.loss_3d_norm(pred_norm, gt_norm)
         loss_dict['3d_col'] = self.loss_3d_col(pred_col, gt_col)
 
         #render predicted images
-        pred_im_col, pred_im_norm, pred_im_occ = self.renderer.render(points, pred_col, pred_occ, pred_norm)
+        pred_im_col, pred_im_norm, pred_im_occ = self.renderer.render(points, pred_occ, pred_col, pred_norm)
+
+
+        pred_im_col = pred_im_col.permute(0, 3, 1, 2)
+        pred_im_norm = pred_im_norm.permute(0, 3, 1, 2)
+
+        print(f"\n\n\nshape of pred_im_col: {pred_im_col.shape}")
+        print(f"shape of pred_im_norm {pred_im_norm.shape}")
+
+        print(f"shape of im: {im.shape}")
+        print(f"shape of im_norm {im_norm.shape}\n\n\n")
 
         loss_dict['2d_col'] = self.loss_2d_col(pred_im_col, im)
         loss_dict['2d_norm'] = self.loss_2d_norm(pred_im_norm, im_norm)
