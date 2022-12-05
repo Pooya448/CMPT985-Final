@@ -12,7 +12,12 @@ class MGNData(Dataset):
 
 
     def __init__(self, mode, data_path='', split_file ='', batch_size = 64, num_workers = 12, split = False, num_view=360, n_subject=None, **kwargs):
-        self.device = torch.device("cpu")
+
+        if torch.cuda.is_available():
+            self.device = torch.device("cuda")
+        else:
+            self.device = torch.device("cpu")
+
         self.data_dir = data_path
         self.batch_size = batch_size
         self.num_workers = num_workers
@@ -70,9 +75,9 @@ class MGNData(Dataset):
         #
         # mesh = load_tex_mesh(obj_path, tex_path, self.device)
 
-        points = torch.load(os.path.join(subject_path, "points.pt"))
-        normals = torch.load(os.path.join(subject_path, "normals.pt"))
-        colors = torch.load(os.path.join(subject_path, "colors.pt"))
+        points = torch.load(os.path.join(subject_path, "points.pt"), map_location=self.device)
+        normals = torch.load(os.path.join(subject_path, "normals.pt"), map_location=self.device)
+        colors = torch.load(os.path.join(subject_path, "colors.pt"), map_location=self.device)
         # sdf = torch.load(os.path.join(subject_path, "sdf.pt"))
 
         perm = torch.randperm(self.n)
@@ -99,7 +104,7 @@ class MGNData(Dataset):
         # normals = torch.load(normals_path, map_location='cpu')
         # colors = torch.load(colors_path, map_location='cpu')
 
-        occ = torch.ones((points.shape[0], 1))
+        occ = torch.ones_like(points)
         joints = torch.zeros((171, 3))
 
         data_dict = {

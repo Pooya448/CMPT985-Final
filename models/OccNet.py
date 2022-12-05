@@ -11,9 +11,10 @@ class OccNet(nn.Module):
     def __init__(self, opt, device):
         super(OccNet, self).__init__()
 
-        self.encoder = SHGNet(opt['shg'])
-        self.regressor = MLP(opt['mlp'], opt['mlp']['channels'])
         self.device = device
+        self.encoder = SHGNet(opt['shg'], device).to(device)
+        self.regressor = MLP(opt['mlp'], opt['mlp']['channels']).to(device)
+        
 
     def forward(self, input_image, spatial_feat, points, azimuth):
 

@@ -97,7 +97,7 @@ class Trainer(object):
         device = self.device
         #read image and pose landmarks(for now both angles and joint location) and GT data
         im = batch.get("im_mesh").to(device)  #Is this one channel or RBG image? -> Rendered mesh or rendered pointcloud
-        points = batch.get("points").to(device)  #todo: canonical or posed?
+        points = batch.get("points").squeeze(1).to(device)  #todo: canonical or posed?
         theta = batch.get("theta").to(device)
         joints = batch.get("joints").to(device)
         beta = batch.get("beta").to(device)  #todo: do we need this? maybe yes for new model
@@ -109,14 +109,19 @@ class Trainer(object):
         smpl_body['gender'] = 'neutral'\
 
         #supervisioon data
-        gt_occ = batch.get("gt_occ").to(device)
-        gt_norm = batch.get("gt_norm").to(device)
-        gt_col = batch.get("gt_col").to(device)
+        gt_occ = batch.get("gt_occ").squeeze(1).to(device)
+        gt_norm = batch.get("gt_norm").squeeze(1).to(device)
+        gt_col = batch.get("gt_col").squeeze(1).to(device)
         im_norm = batch.get("im_norm").to(device)
         azimuth = batch.get("azimuth").to(device)
 
+        print(f"shape of norms: {gt_norm.shape}")
+        print(f"shape of cols: {gt_col.shape}")
+        print(f"shape of occ: {gt_occ.shape}")
+        print(f"shape of ims {im_norm.shape}")
+
         #use leap for weights and canonicalization
-        point_weights, can_points = query_leap(points, self.opt['leap_path'], smpl_body, self.opt['body_model_path'], self.batch_size, self.device, canonical_points=False, vis=False)
+        # point_weights, can_points = query_leap(points, self.opt['leap_path'], smpl_body, self.opt['body_model_path'], self.batch_size, self.device, canonical_points=False, vis=False)
 
         #create spatial feature using landmarks(joints in our case)
         f_ps = self.rbf(points, joints)
@@ -133,6 +138,10 @@ class Trainer(object):
         ###calculate all the loss here
         loss_dict = {}
         loss_dict['3d_occ'] = self.loss_3d_occ(pred_occ, gt_occ)
+        print(f"pred occ shape: {pred_occ.shape}")
+        print(f"gt occ shape: {gt_occ.shape}")
+        print(f"pred norm shape: {pred_occ.shape}")
+        print(f"gt norm shape: {gt_occ.shape}")
         loss_dict['3d_norm']  = self.loss_3d_norm(pred_norm, gt_norm)
         loss_dict['3d_col'] = self.loss_3d_col(pred_col, gt_col)
 
@@ -205,7 +214,7 @@ class Trainer(object):
 
     def load_checkpoint(self):
         checkpoints = glob(self.checkpoint_path+'/*')
-        if len(checkpoints) == 0:
+        if True or len(checkpoints) == 0:
             print('No checkpoints found at {}'.format(self.checkpoint_path))
             return 0
 
