@@ -87,11 +87,11 @@ class MGNData(Dataset):
         # points = points[idxs]
         # normals = normals[idxs]
         # colors = colors[idxs]
-        points = points[:, idxs, :]
+        points = torch.squeeze(points[:, idxs, :])
         # print("after points", points.shape)
         # print("normals shape", normals.shape, idxs)
-        normals = normals[:, idxs, :]
-        colors = colors[:, idxs, :]
+        normals = torch.squeeze(normals[:, idxs, :])
+        colors = torch.squeeze(colors[:, idxs, :])
         # sdf = sdf[idxs]
 
         # col_im = read_image(col_im_path).permute((1, 2, 0))

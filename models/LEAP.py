@@ -28,6 +28,8 @@ def normalize_for_leap(points, leap_target, device):
     p_loc = loc(points, device)
     t_loc = loc(leap_target, device)
 
+    print("p_loc shape", p_loc.shape)
+    print("t_loc shape", t_loc.shape)
     diff = (t_loc - p_loc).unsqueeze(dim=1)
     diff = diff.repeat([1, points.shape[1], 1])
     aligned = (points + diff).to(dtype=torch.float32)
@@ -38,6 +40,7 @@ def query_leap(points, leap_path, smpl_body, bm_path, batch_size, device, canoni
     smpl_body = {key: val.to(device=device) if torch.is_tensor(val) else val for key, val in smpl_body.items()}
 
     # load LEAP
+    print("batch size", batch_size)
     leap_model = LEAPBodyModel(leap_path,
                                bm_path=os.path.join(bm_path, smpl_body['gender'], 'model.pkl'),
                                num_betas=smpl_body['betas'].shape[1],
