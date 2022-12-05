@@ -12,6 +12,8 @@ import ipdb
 from .DR import DR
 from .LEAP import query_leap
 
+import tqdm
+
 class Trainer(object):
 
     def __init__(self, occ_net, norm_net, col_net, rbf, device, train_dataset, val_dataset,  batch_size, opt):
@@ -176,10 +178,12 @@ class Trainer(object):
             if epoch % 100 == 0:   #save every 100 epochs
                 self.save_checkpoint(epoch)
 
-            for batch in train_data_loader:
+            for batch in tqdm.tqdm(train_data_loader):
                 loss, loss_dict = self.train_step(batch, epoch)
                 print("Current loss: {},   ".format(loss))
-                print("Individual loss: ", loss_dict)
+                # print("Individual loss: ", loss_dict)
+                for loss_key, loss_value in loss_dict.items():
+                    print(f"{loss_key}: {loss_value.item()}")
                 sum_loss += loss
             batch_loss = sum_loss / len(train_data_loader)
 
