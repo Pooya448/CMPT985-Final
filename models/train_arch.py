@@ -214,7 +214,7 @@ class Trainer(object):
 
     def load_checkpoint(self):
         checkpoints = glob(self.checkpoint_path+'/*')
-        if len(checkpoints) == 0:
+        if True or len(checkpoints) == 0:
             print('No checkpoints found at {}'.format(self.checkpoint_path))
             return 0
 

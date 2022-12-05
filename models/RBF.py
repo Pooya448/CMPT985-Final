@@ -9,6 +9,7 @@ def RBF(X, Y, gamma=None, squared=False):
 
     size = (X.shape[0], X.shape[1], Y.shape[1], Y.shape[2])
 
+    print("X size", X.shape, Y.shape, size)
     x = X.unsqueeze(2).expand(size)
     y = Y.unsqueeze(1).expand(size)
 
