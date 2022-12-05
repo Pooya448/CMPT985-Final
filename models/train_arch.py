@@ -83,6 +83,19 @@ class Trainer(object):
 
         return loss.item(), loss_dict
 
+    def train_step_occ(self, batch, ep=None):
+
+        self.occ_net.train()
+        self.occ_opt.zero_grad()
+
+        loss = self.compute_loss_occ(batch, ep)
+        loss.backward()
+
+        self.occ_opt.step()
+
+
+        return loss.item()
+
     @staticmethod
     def loss_total( loss_dict, weight_dict=None):
         w_loss = dict()
@@ -91,6 +104,25 @@ class Trainer(object):
 
         tot_loss = list(w_loss.values())
         return torch.stack(tot_loss).sum()
+
+    def compute_loss_occ(self, batch, ep=None):
+        device = self.device
+        points = batch.get("occ_points").to(device)
+        joints = batch.get("joints").to(device)
+        azimuth = batch.get("azimuth").to(device)
+        im = batch.get("im_mesh").to(device)
+        gt_occ = batch.get("gt_occ").squeeze(1).to(device)
+
+        f_ps = self.rbf(points, joints)
+
+        pred_occ, _ = self.occ_net(im, f_ps, points, azimuth)
+
+        pred_occ = pred_occ.permute(0, 2, 1)
+
+        occ_loss = self.loss_3d_occ(pred_occ, gt_occ)
+
+        return occ_loss
+
 
     def compute_loss(self, batch, ep=None):
         """one forward pass and loss calculation for a batch"""
@@ -175,6 +207,11 @@ class Trainer(object):
             train_data_loader = self.train_dataset.get_loader()
             if epoch % 100 == 0:   #save every 100 epochs
                 self.save_checkpoint(epoch)
+
+            for batch in train_data_loader:
+                loss = self.train_step_occ(batch, epoch)
+                print("Current loss: {},   ".format(loss))
+
 
             for batch in train_data_loader:
                 loss, loss_dict = self.train_step(batch, epoch)

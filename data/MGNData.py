@@ -65,7 +65,6 @@ class MGNData(Dataset):
 
         mesh_im_path = os.path.join(subject_path, f"mesh_render_360/{view_angle}.png")
         norm_im_path = os.path.join(subject_path, f"norm_render_360/{view_angle}.png")
-        # col_im_path = os.path.join(subject_path, f"point_color_render_360/{view_angle}.png")
 
         mesh_im = read_image(mesh_im_path).float() # C x W x H
         norm_im = read_image(norm_im_path).float()
@@ -78,7 +77,9 @@ class MGNData(Dataset):
         points = torch.load(os.path.join(subject_path, "points.pt"), map_location=self.device)
         normals = torch.load(os.path.join(subject_path, "normals.pt"), map_location=self.device)
         colors = torch.load(os.path.join(subject_path, "colors.pt"), map_location=self.device)
-        # sdf = torch.load(os.path.join(subject_path, "sdf.pt"))
+
+        sdf = torch.load(os.path.join(subject_path, "sdf.pt"), map_location=self.device).reshape(-1, 1)
+        occ_points = torch.load(os.path.join(subject_path, "occ_points.pt"), map_location=self.device)
 
         perm = torch.randperm(self.n)
         idxs = perm[:self.n_sample]
@@ -92,7 +93,9 @@ class MGNData(Dataset):
         # print("normals shape", normals.shape, idxs)
         normals = normals[:, idxs, :]
         colors = colors[:, idxs, :]
-        # sdf = sdf[idxs]
+
+        sdfs = sdf[idxs, :]
+        occ_points = occ_points[idxs, :]
 
         # col_im = read_image(col_im_path).permute((1, 2, 0))
 
@@ -121,9 +124,10 @@ class MGNData(Dataset):
 
         ### 3D Data
             'points' : points,
+            'occ_points' : occ_points,
             'gt_norm' : normals,
             'gt_col' : colors,
-            'gt_occ' : occ,
+            'gt_occ' : sdfs,
 
         ### Render & Projection
             'azimuth' : view_angle,
