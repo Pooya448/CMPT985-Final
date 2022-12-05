@@ -13,6 +13,7 @@ from .DR import DR
 from .LEAP import query_leap
 
 import tqdm
+from PIL import Image
 
 class Trainer(object):
 
@@ -67,7 +68,7 @@ class Trainer(object):
         self.bacth_size = opt['training']['batch_size']
 
 
-    def train_step(self,batch, ep=None):
+    def train_step(self,batch, ep=None, batch_idx=None):
 
         self.occ_net.train()
         self.occ_opt.zero_grad()
@@ -76,7 +77,7 @@ class Trainer(object):
         self.col_net.train()
         self.col_opt.zero_grad()
 
-        loss, loss_dict = self.compute_loss(batch, ep)
+        loss, loss_dict = self.compute_loss(batch, ep, batch_idx)
         loss.backward()
 
         self.occ_opt.step()
@@ -94,7 +95,7 @@ class Trainer(object):
         tot_loss = list(w_loss.values())
         return torch.stack(tot_loss).sum()
 
-    def compute_loss(self, batch, ep=None):
+    def compute_loss(self, batch, ep=None, batch_idx=None):
         """one forward pass and loss calculation for a batch"""
         device = self.device
         #read image and pose landmarks(for now both angles and joint location) and GT data
@@ -152,6 +153,17 @@ class Trainer(object):
         #render predicted images
         pred_im_col, pred_im_norm, pred_im_occ = self.renderer.render(points, pred_occ, pred_col, pred_norm)
 
+        if not os.path.exists(os.path.join("results", str(ep), str(batch_idx))):
+            os.makedirs(os.path.join("results", str(ep), str(batch_idx)))
+        with torch.no_grad():
+            path_to_save = os.path.join("results", str(ep), str(batch_idx))
+            col_array = pred_im_col[0].mul_(255).add_(0.5).clamp_(0, 255).to('cpu', torch.uint8).numpy()
+            pred_im_norm_pic = pred_im_norm[0].mul_(255).add_(0.5).clamp_(0, 255).to('cpu', torch.uint8).numpy()
+            pred_im_occ_pic = pred_im_occ[0].squeeze().mul_(255).add_(0.5).clamp_(0, 255).to('cpu', torch.uint8).numpy()
+            Image.fromarray(col_array).save(os.path.join(path_to_save, "col_render.png"))
+            Image.fromarray(pred_im_norm_pic).save(os.path.join(path_to_save, "norm_render.png"))
+            Image.fromarray(pred_im_occ_pic).save(os.path.join(path_to_save, "occ_render.png"))
+
 
         pred_im_col = pred_im_col.permute(0, 3, 1, 2)
         pred_im_norm = pred_im_norm.permute(0, 3, 1, 2)
@@ -178,19 +190,20 @@ class Trainer(object):
             if epoch % 100 == 0:   #save every 100 epochs
                 self.save_checkpoint(epoch)
 
-            for batch in tqdm.tqdm(train_data_loader):
-                loss, loss_dict = self.train_step(batch, epoch)
-                print("Current loss: {},   ".format(loss))
+            print("Total Batches:", len(train_data_loader))
+            for batch_idx, batch in enumerate(tqdm.tqdm(train_data_loader)):
+                loss, loss_dict = self.train_step(batch, epoch, batch_idx)
+                # print("Current loss: {},   ".format(loss))
                 # print("Individual loss: ", loss_dict)
-                for loss_key, loss_value in loss_dict.items():
-                    print(f"{loss_key}: {loss_value.item()}")
+                # for loss_key, loss_value in loss_dict.items():
+                #     print(f"{loss_key}: {loss_value.item()}")
                 sum_loss += loss
             batch_loss = sum_loss / len(train_data_loader)
 
             if self.train_min is None:
                 self.train_min = batch_loss
+            self.save_checkpoint(epoch)
             if batch_loss < self.train_min:
-                self.save_checkpoint(epoch)
                 for path in glob(self.exp_path + 'train_min=*'):
                     os.remove(path)
                 np.save(self.exp_path + 'train_min={}'.format(epoch), [epoch, batch_loss])
