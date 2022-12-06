@@ -22,8 +22,8 @@ def train(opt):
     # train_dataset = ARCHData('train', data_path=opt['data_path'], split_file=opt['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'])
     # val_dataset = ARCHData('val', data_path=opt['data_path'], split_file=opt['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'])
 
-    train_dataset = MGNData('train', data_path=opt['data']['data_dir'], split_file=opt['data']['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'], split=True, num_view=360, n_subject=1)
-    val_dataset = MGNData('val', data_path=opt['data']['data_dir'], split_file=opt['data']['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'], split=False, num_view=360, n_subject=1)
+    train_dataset = MGNData('train', data_path=opt['data']['data_dir'], split_file=opt['data']['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'], split=True, num_view=360)
+    val_dataset = MGNData('val', data_path=opt['data']['data_dir'], split_file=opt['data']['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'], split=False, num_view=360)
 
     print("Datasets -> Created.")
 
