@@ -13,11 +13,12 @@ def project_points(points, azimuth, elevation, distance, image_size, device):
 
     R, T = look_at_view_transform(distance, elevation, azimuth)
 
-    cameras = FoVOrthographicCameras(znear=z_nears, zfar=z_fars, device=device, R=R, T=T)
+    cameras = FoVOrthographicCameras(znear=-1, zfar=1, device=device, R=R, T=T)
 
     projections = cameras.transform_points_screen(points, image_size=image_size)[:, :, :2]
 
-    return projections.round().long()
+    return projections
+
 
 def map_points_to_plane(feat_map, pixel_coords):
 
@@ -26,6 +27,14 @@ def map_points_to_plane(feat_map, pixel_coords):
 
         xs = pixel_coords[i, :, 0]
         ys = pixel_coords[i, :, 1]
+
+        xs = (xs - xs.min()) / (xs.max() - xs.min())
+        xs = xs * 511
+        xs = xs.round().long()
+
+        ys = (ys - ys.min()) / (ys.max() - ys.min())
+        ys = ys * 511
+        ys = ys.round().long()
 
         f = feat_map[i, :, xs, ys]
         aligned_feats.append(f)
