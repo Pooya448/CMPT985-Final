@@ -29,12 +29,6 @@ class Trainer(object):
             self.norm_opt = optim.Adam(self.norm_net.parameters(), lr=1e-4)
             self.col_opt = optim.Adam(self.col_net.parameters(), lr=1e-4)
 
-        if opt['training']['optimizer']  == 'Adadelta':
-            self.occ_opt = optim.Adadelta(self.occ_net.parameters())
-            self.norm_opt = optim.Adadelta(self.norm_net.parameters())
-            self.col_opt = optim.Adadelta(self.col_net.parameters())
-
-
         if opt['training']['optimizer']  == 'RMSprop':
             self.occ_opt = optim.RMSprop(self.occ_net.parameters(), momentum=0.9)
             self.norm_opt = optim.RMSprop(self.norm_net.parameters(), momentum=0.9)
@@ -64,7 +58,6 @@ class Trainer(object):
 
 
     def train_step(self,batch, ep=None):
-
         self.occ_net.train()
         self.occ_opt.zero_grad()
         self.norm_net.train()
@@ -82,7 +75,6 @@ class Trainer(object):
         return loss.item(), loss_dict
 
     def train_step_occ(self, batch, ep=None):
-
         self.occ_net.train()
         self.occ_opt.zero_grad()
 
@@ -264,7 +256,6 @@ class Trainer(object):
         return epoch
 
     def compute_val_loss(self, ep):
-
         self.col_net.eval()
         self.occ_net.eval()
         self.norm_net.eval()

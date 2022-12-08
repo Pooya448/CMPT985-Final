@@ -1,45 +1,45 @@
 data:
-  data_dir: C:\Users\17788\CMPT985\Multi-Garment_dataset # Training data directory
+  data_dir: C:\Users\17788\CMPT985\Multi-Garment_dataset
   split_file: C:\Users\17788\CMPT985\Multi-Garment_dataset/split_file.npz
 experiment:
-  root_dir: C:\Users\17788\CMPT985\Checkpoints # Where to save checkpoints and final trained models
-  exp_name: trial_1 # exp_name
+  root_dir: C:\Users\17788\CMPT985\Checkpoints
+  exp_name: trial_1 
 model:
   spatial_feat: 171
-  occ_net: #not used anywhere
+  occ_net:
     shg:
-      n_stacks: 1 #ask
-      n_modules: 3 #ask
+      n_stacks: 1
+      n_modules: 3
       in_channels: 3
       out_channels: 256
-      depth: 1 #ask
-      n_joints: 10 #ask
+      depth: 1
+      n_joints: 10
     mlp:
       channels: [427, 1024, 512, 256, 128, 1]
-      no_residual: true  #just dummy
-      last_activation: sigmoid   #just dummy
-      nlast_activation: relu  #just dummy
-      norm: weight #what is this??
-  normal_net: #not used anywhere
+      no_residual: true  
+      last_activation: sigmoid
+      nlast_activation: relu 
+      norm:
+  normal_net:
     unet:
       in_channels: 3
       out_channels: 64
     mlp:
       channels: [491, 1024, 512, 256, 128, 3]
-      no_residual: true  #just dummy
-      last_activation: sigmoid   #just dummy
-      nlast_activation: relu  #just dummy
-      norm: weight #what is this??
-  color_net: #not used anywhere
+      no_residual: true  
+      last_activation: sigmoid
+      nlast_activation: relu
+      norm: weight
+  color_net:
     unet:
       in_channels: 3
       out_channels: 64
     mlp:
       channels: [555, 1024, 512, 256, 128, 3]
-      no_residual: true  #just dummy
-      last_activation: sigmoid   #just dummy
-      nlast_activation: relu  #just dummy
-      norm: weight #what is this??
+      no_residual: true 
+      last_activation: sigmoid
+      nlast_activation: relu
+      norm: weight
 renderer:
   renderer_type: simple
   cam_type: orthographic
@@ -48,21 +48,21 @@ renderer:
   radius: 0.003
   points_per_pixel: 10
 shg:
-  n_stacks: 1 #ask
-  n_modules: 3 #ask
+  n_stacks: 1
+  n_modules: 3
   in_channels: 3
   out_channels: 256
-  depth: 1 #ask
-  n_joints: 10 #ask
+  depth: 1
+  n_joints: 10
 unet:
   in_channels: 3
   out_channels: 64
 mlp:
   channels: [1024, 512, 256, 128]
-  no_residual: true  #just dummy
-  last_activation: sigmoid   #just dummy
-  nlast_activation: relu  #just dummy
-  norm: weight #what is this??
+  no_residual: true
+  last_activation: sigmoid 
+  nlast_activation: relu
+  norm: weight
   in_channels: 427
 training:
   batch_size: 1
