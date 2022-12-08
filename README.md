@@ -5,6 +5,10 @@ Our work is inspired by the ARCH paper itself, and we have also taken advantage 
 1. [Stacked Hourglass Network](https://medium.com/@monadsblog/stacked-hourglass-networks-14bee8c35678)
 2. [LEAP](https://github.com/neuralbodies/leap)
 
+## Models
+
+All the models have been implemented in the `models` folder in the root directory. 
+
 ## Train
 
 To run the training job, run the following:

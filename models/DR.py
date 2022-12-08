@@ -1,23 +1,16 @@
-import os
 import torch
 import numpy as np
-from tqdm.notebook import tqdm
-# import imageio
-import torch.nn as nn
-import torch.nn.functional as F
-import matplotlib.pyplot as plt
 from skimage import img_as_ubyte
 
 # io utils
 from pytorch3d.io import load_obj
 
 # datastructures
-from pytorch3d.structures import Meshes, Pointclouds
+from pytorch3d.structures import Pointclouds
 
 # 3D transformations functions
 from pytorch3d.transforms import Rotate, Translate
 
-# rendering components
 from pytorch3d.renderer import (
     look_at_view_transform,
     FoVPerspectiveCameras,
@@ -44,14 +37,6 @@ class DR():
     def render(self, points, occ, col, norm):
 
         colored_norms = 0.5 * norm + 0.5
-
-        # print(f"\n\n\n\n render points shape: {len(points.tolist())}")
-        # print(f"\n\n\n\n render points shape: {norm.shape}")
-        # print(f"\n\n\n\n render points shape: {col.shape}")
-        # points = points.tolist()
-        # norm = norm.tolist()
-        # col = col.tolist()
-        # occ = occ.tolist()
 
         col_ptc = Pointclouds(points=points, normals=norm, features=col)
         norm_ptc = Pointclouds(points=points, normals=norm, features=colored_norms)
@@ -117,15 +102,6 @@ class DR():
         elif self.composition_type == 'norm_weight':
             compositor = NormWeightedCompositor()
 
-        if self.renderer_type == 'simple':
-            renderer = PointsRenderer(
-                rasterizer=rasterizer,
-                compositor=compositor
-            ).to(self.device)
-        elif self.renderer_type == 'pulsar':
-            renderer = PulsarPointsRenderer(
-                rasterizer=rasterizer,
-                n_channels=4
-            ).to(self.device)
+        renderer = PointsRenderer(rasterizer=rasterizer,compositor=compositor).to(self.device)
 
         return renderer

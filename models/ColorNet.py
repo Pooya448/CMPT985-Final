@@ -12,7 +12,6 @@ class ColorNet(nn.Module):
         super(ColorNet, self).__init__()
 
         self.encoder = UNet(opt['unet'])
-        #todo: most likely you need to change mlp to Occnet, Colornet etc
         self.regressor = MLP(opt['mlp'], opt['mlp']['channels'])
         self.device = device
 

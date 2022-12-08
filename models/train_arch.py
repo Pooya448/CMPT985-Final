@@ -1,4 +1,3 @@
-"""This is for training tailornet meshes"""
 from __future__ import division
 import torch
 import torch.optim as optim
@@ -46,7 +45,7 @@ class Trainer(object):
         self.loss_3d_col = nn.L1Loss()
         self.loss_3d_norm = nn.L1Loss()  #todo: this or angle based loss?
         self.loss_2d_norm =  nn.L1Loss()  #todo: GT data? -> Done
-        self.loss_2d_col =  nn.L1Loss()  #todo: this or perceptual loss?
+        self.loss_2d_col =  nn.L1Loss() 
 
         self.renderer = DR(opt['renderer'], self.device)
 
@@ -54,7 +53,6 @@ class Trainer(object):
         exp_name = opt['experiment']['exp_name']
         self.train_dataset = train_dataset
         self.val_dataset = val_dataset
-        #self.exp_path = os.path.dirname(__file__) + '/../experiments/{}/'.format( exp_name)
         self.exp_path = '{}/{}/'.format(root_dir, exp_name)
         self.checkpoint_path = self.exp_path + 'checkpoints/'.format(exp_name)
         if not os.path.exists(self.checkpoint_path):
@@ -132,7 +130,7 @@ class Trainer(object):
         points = batch.get("points").squeeze(1).to(device)  #todo: canonical or posed?
         theta = batch.get("theta").to(device)
         joints = batch.get("joints").to(device)
-        beta = batch.get("beta").to(device)  #todo: do we need this? maybe yes for new model
+        beta = batch.get("beta").to(device) 
 
         smpl_body = {}
         smpl_body['betas'] = beta
@@ -146,11 +144,6 @@ class Trainer(object):
         gt_col = batch.get("gt_col").squeeze(1).to(device)
         im_norm = batch.get("im_norm").to(device)
         azimuth = batch.get("azimuth").to(device)
-
-        # print(f"shape of norms: {gt_norm.shape}")
-        # print(f"shape of cols: {gt_col.shape}")
-        # print(f"shape of occ: {gt_occ.shape}")
-        # print(f"shape of ims {im_norm.shape}")
 
         #use leap for weights and canonicalization
         # point_weights, can_points = query_leap(points, self.opt['leap_path'], smpl_body, self.opt['body_model_path'], self.batch_size, self.device, canonical_points=False, vis=False)
@@ -186,12 +179,6 @@ class Trainer(object):
         pred_im_col = pred_im_col.permute(0, 3, 1, 2)
         pred_im_norm = pred_im_norm.permute(0, 3, 1, 2)
 
-        # print(f"\n\n\nshape of pred_im_col: {pred_im_col.shape}")
-        # print(f"shape of pred_im_norm {pred_im_norm.shape}")
-        #
-        # print(f"shape of im: {im.shape}")
-        # print(f"shape of im_norm {im_norm.shape}\n\n\n")
-
         loss_dict['2d_col'] = self.loss_2d_col(pred_im_col, im)
         loss_dict['2d_norm'] = self.loss_2d_norm(pred_im_norm, im_norm)
 
@@ -214,7 +201,6 @@ class Trainer(object):
             for batch in tqdm.tqdm(train_data_loader):
                 loss, loss_dict = self.train_step(batch, epoch)
                 print("Current loss: {},   ".format(loss))
-                # print("Individual loss: ", loss_dict)
                 for loss_key, loss_value in loss_dict.items():
                     print(f"{loss_key}: {loss_value.item()}")
                 sum_loss += loss

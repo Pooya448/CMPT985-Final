@@ -1,10 +1,6 @@
 import os
-import argparse
 
-# import pyrender
 import torch
-import trimesh
-import pickle
 import numpy as np
 
 from leap import LEAPBodyModel

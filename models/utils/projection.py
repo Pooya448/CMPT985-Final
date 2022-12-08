@@ -30,5 +30,4 @@ def map_points_to_plane(feat_map, pixel_coords):
         f = feat_map[i, :, xs, ys]
         aligned_feats.append(f)
 
-        # .permute((0, 2, 1))
     return torch.stack(aligned_feats, dim=0)
