@@ -1,0 +1,11 @@
+pytorch=1.12
+pyyaml
+sckit-learn
+scikit-image
+opencv
+tensorboard
+ipdb
+matplotlib
+trimesh
+leap // PyPi local file
+cython
