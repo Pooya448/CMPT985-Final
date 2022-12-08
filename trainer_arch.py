@@ -3,24 +3,16 @@ from configs.config import load_config
 import torch
 # General config
 
-# import models.OccNet as OccNet
-# import models.NormNet as NormNet
-# import models.ColorNet as ColorNet
-
 from models.OccNet import OccNet
 from models.NormNet import NormNet
 from models.ColorNet import ColorNet
 from models.RBF import RBF
-from data.ARCHData import ARCHData
 from data.MGNData import MGNData
 
 import os
 os.environ["CUDA_LAUNCH_BLOCKING"] = '1'
 
 def train(opt):
-
-    # train_dataset = ARCHData('train', data_path=opt['data_path'], split_file=opt['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'])
-    # val_dataset = ARCHData('val', data_path=opt['data_path'], split_file=opt['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'])
 
     train_dataset = MGNData('train', data_path=opt['data']['data_dir'], split_file=opt['data']['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'], split=True, num_view=360)
     val_dataset = MGNData('val', data_path=opt['data']['data_dir'], split_file=opt['data']['split_file'], batch_size=opt['training']['batch_size'], num_workers=opt['training']['num_worker'], split=False, num_view=360)
