@@ -24,8 +24,21 @@ After this is setup, run the following command to get both the video and json ou
 ./build/examples/openpose/openpose.bin --image_dir <IMAGE_DIR> --write_json {OUTPUT_JSON_PATH}
 ```
 
+## LEAP
 
-Resources:
+In order to install LEAP, simply follow the instructions in their [README](https://github.com/neuralbodies/leap#2-installation)
+
+For easier access, we have provided this below (Run this in root of this directory):
+
+```
+git clone https://github.com/neuralbodies/leap.git
+cd ./leap
+python setup.py build_ext --inplace
+pip install -e .
+
+```
+
+## Resources:
 
 Stacked Hourglass: https://medium.com/@monadsblog/stacked-hourglass-networks-14bee8c35678
 
