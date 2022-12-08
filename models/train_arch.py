@@ -4,7 +4,6 @@ import torch
 import torch.optim as optim
 from torch.nn import functional as F
 import os
-from torch.utils.tensorboard import SummaryWriter
 from glob import glob
 import numpy as np
 import torch.nn as nn
@@ -61,7 +60,6 @@ class Trainer(object):
         if not os.path.exists(self.checkpoint_path):
             print(self.checkpoint_path)
             os.makedirs(self.checkpoint_path)
-        self.writer = SummaryWriter(self.exp_path + 'summary'.format(exp_name))
         self.val_min = None
         self.train_min = None
         self.bacth_size = opt['training']['batch_size']
@@ -243,13 +241,6 @@ class Trainer(object):
                     for path in glob(self.exp_path + 'val_min=*'):
                         os.remove(path)
                     np.save(self.exp_path + 'val_min={}'.format(epoch), [epoch, batch_loss])
-                self.writer.add_scalar('val loss batch avg', val_loss, epoch)
-
-            self.writer.add_scalar('training loss last batch', loss, epoch)
-            self.writer.add_scalar('training loss batch avg', batch_loss, epoch)
-            for k in loss_dict.keys():
-                self.writer.add_scalar('training loss for last batch {} avg'.format(k), loss_dict[k] , epoch)
-                #self.writer.add_scalar('training loss for batch {} avg'.format(k), loss_terms[k] , epoch)  #todo: add this if needed
 
     def save_checkpoint(self, epoch):
         path = self.checkpoint_path + 'checkpoint_epoch_{}.tar'.format(epoch)

@@ -3,7 +3,6 @@ pyyaml
 sckit-learn
 scikit-image
 opencv
-tensorboard
 ipdb
 matplotlib
 trimesh
