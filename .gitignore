@@ -132,3 +132,6 @@ dmypy.json
 *.obj
 *.jpg
 *.pt
+
+MGNData/
+Checkpoints/
